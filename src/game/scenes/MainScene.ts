@@ -1,0 +1,57 @@
+import Phaser from "phaser";
+import { FactoryShip } from "../entities/FactoryShip";
+import { Fighter } from "../entities/Fighter";
+import type { Team } from "../types";
+import { GameUI } from "../ui/GameUI";
+
+// Import assets
+import factoryP1Image from "../../assets/factory_p1.png";
+import factoryP2Image from "../../assets/factory_p2.png";
+import backgroundImage from "../../assets/background.png";
+import fighterP1Image from "../../assets/fighter_p1.png";
+import fighterP2Image from "../../assets/fighter_p2.png";
+import laserImage from "../../assets/laser.png";
+import { UnitManager } from "../UnitManager";
+
+export default class MainScene extends Phaser.Scene {
+  private playerShip!: FactoryShip;
+  private enemyShip!: FactoryShip;
+  private gameUI!: GameUI;
+
+  public unitManager: UnitManager;
+
+  constructor() {
+    super("MainScene");
+    this.unitManager = new UnitManager(this);
+  }
+
+  preload() {
+    this.load.image("factory_p1", factoryP1Image);
+    this.load.image("factory_p2", factoryP2Image);
+    this.load.image("background", backgroundImage);
+    this.load.image("fighter_p1", fighterP1Image);
+    this.load.image("fighter_p2", fighterP2Image);
+    this.load.image("laser", laserImage);
+  }
+
+  create() {
+    this.add.image(400, 300, "background");
+
+    this.playerShip = new FactoryShip(this, 200, 300, "player");
+    this.enemyShip = new FactoryShip(this, 600, 300, "enemy");
+    this.unitManager.addUnit(this.playerShip);
+    this.unitManager.addUnit(this.enemyShip);
+
+    // Create UI
+    this.gameUI = new GameUI(this, this.playerShip, this.enemyShip);
+  }
+
+  update(time: number, delta: number) {
+    this.playerShip.update(time, delta);
+    this.enemyShip.update(time, delta);
+    this.unitManager.update(time, delta);
+
+    // Update UI
+    this.gameUI.update();
+  }
+}
