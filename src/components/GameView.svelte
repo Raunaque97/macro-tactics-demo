@@ -16,7 +16,7 @@
         default: "arcade",
         arcade: {
           gravity: { x: 0, y: 0 },
-          debug: false,
+          debug: true,
         },
       },
     };

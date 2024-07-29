@@ -46,6 +46,10 @@ export class FactoryShip extends Ship {
       this.velocity = new Vector2(0, FactoryShip.MOVE_SPEED);
       this.facing = new Vector2(0, 1);
     }
+    // set hit box to a circle
+    this.setOrigin(0.5, 0.5);
+    // this.setOffset(-this.width / 2, -this.height / 2);
+    this.setCircle(this.width / 3, this.height / 3);
   }
 
   update(time: number, delta: number) {

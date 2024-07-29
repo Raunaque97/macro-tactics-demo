@@ -3,7 +3,10 @@ import type { IShip, UnitType, Team } from "../types";
 import { Vector2 } from "../utils/Vector2";
 import type MainScene from "../scenes/MainScene";
 
-export abstract class Ship extends Phaser.GameObjects.Sprite implements IShip {
+export abstract class Ship
+  extends Phaser.Physics.Arcade.Sprite
+  implements IShip
+{
   type: UnitType;
   team: Team;
   velocity: Vector2;
