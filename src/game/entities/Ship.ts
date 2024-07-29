@@ -9,6 +9,8 @@ export abstract class Ship extends Phaser.GameObjects.Sprite implements IShip {
   velocity: Vector2;
   facing: Vector2;
   health: number;
+  maxVelocity: number;
+  turnRate: number;
 
   constructor(
     scene: MainScene,
@@ -17,7 +19,9 @@ export abstract class Ship extends Phaser.GameObjects.Sprite implements IShip {
     texture: string,
     type: UnitType,
     team: Team,
-    health: number
+    health: number,
+    maxVelocity: number,
+    turnRate: number
   ) {
     super(scene, x, y, texture);
     this.type = type;
@@ -25,6 +29,8 @@ export abstract class Ship extends Phaser.GameObjects.Sprite implements IShip {
     this.velocity = new Vector2(0, 0);
     this.facing = new Vector2(1, 0);
     this.health = health;
+    this.maxVelocity = maxVelocity;
+    this.turnRate = turnRate;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -56,7 +62,27 @@ export abstract class Ship extends Phaser.GameObjects.Sprite implements IShip {
   }
 
   thrust(power: number) {
-    this.velocity = this.velocity.add(this.facing.multiply(power));
+    const acceleration = this.facing.multiply(power);
+    this.velocity = this.velocity.add(acceleration);
+    this.limitVelocity();
+  }
+
+  private limitVelocity() {
+    const speed = this.velocity.magnitude();
+    if (speed > this.maxVelocity) {
+      this.velocity = this.velocity.normalize().multiply(this.maxVelocity);
+    }
+  }
+
+  turn(direction: number) {
+    const turnAmount = this.turnRate * direction;
+    const cosTheta = Math.cos(turnAmount);
+    const sinTheta = Math.sin(turnAmount);
+
+    this.facing = new Vector2(
+      this.facing.x * cosTheta - this.facing.y * sinTheta,
+      this.facing.x * sinTheta + this.facing.y * cosTheta
+    ).normalize();
   }
 
   goTowards(
@@ -67,7 +93,14 @@ export abstract class Ship extends Phaser.GameObjects.Sprite implements IShip {
     const toTarget = target.subtract(this.position);
 
     if (allowRotation) {
-      this.facing = toTarget.normalize();
+      const targetAngle = Math.atan2(toTarget.y, toTarget.x);
+      const currentAngle = Math.atan2(this.facing.y, this.facing.x);
+      const angleDiff = Phaser.Math.Angle.ShortestBetween(
+        (currentAngle * 180.0) / Math.PI,
+        (targetAngle * 180.0) / Math.PI
+      );
+      const turnDirection = Math.sign(angleDiff);
+      this.turn(turnDirection);
     }
 
     this.thrust(acceleration);

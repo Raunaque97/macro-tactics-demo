@@ -8,6 +8,9 @@ export class Fighter extends Ship {
   weapon: FighterWeapon;
   private ai: FighterAI;
 
+  static readonly MAX_VELOCITY = 100; // pixels per second
+  static readonly TURN_RATE = 0.02; // radians per frame
+
   constructor(public scene: MainScene, x: number, y: number, team: Team) {
     super(
       scene,
@@ -16,7 +19,9 @@ export class Fighter extends Ship {
       team === "player" ? "fighter_p1" : "fighter_p2",
       "fighter",
       team,
-      50
+      50,
+      Fighter.MAX_VELOCITY,
+      Fighter.TURN_RATE
     );
 
     this.weapon = new FighterWeapon(this);
@@ -25,7 +30,6 @@ export class Fighter extends Ship {
 
   update(time: number, delta: number) {
     super.update(time, delta);
-    // console.log("Fighter updating", this.velocity, this.facing);
     this.weapon.update(delta);
     this.ai.update(delta);
   }

@@ -35,15 +35,22 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(400, 300, "background");
+    this.add.image(600, 400, "background").setScale(1.2);
 
-    this.playerShip = new FactoryShip(this, 200, 300, "player");
-    this.enemyShip = new FactoryShip(this, 600, 300, "enemy");
+    this.playerShip = new FactoryShip(this, 400, 400, "player");
+    this.enemyShip = new FactoryShip(this, 800, 400, "enemy");
     this.unitManager.addUnit(this.playerShip);
     this.unitManager.addUnit(this.enemyShip);
 
     // Create UI
     this.gameUI = new GameUI(this, this.playerShip, this.enemyShip);
+    this.scale.on("resize", this.resize, this);
+    this.resize();
+  }
+
+  resize() {
+    const { width, height } = this.scale;
+    console.log("resize", width, height);
   }
 
   update(time: number, delta: number) {

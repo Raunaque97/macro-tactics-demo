@@ -21,7 +21,7 @@ export class FactoryShip extends Ship {
   } | null = null;
   // production time in seconds
   private static readonly PRODUCTION_TIMES: Record<CombatUnitType, number> = {
-    fighter: 1,
+    fighter: 0.5,
     bomber: 4,
     frigate: 16,
   };
@@ -34,7 +34,9 @@ export class FactoryShip extends Ship {
       team === "player" ? "factory_p1" : "factory_p2",
       "factory",
       team,
-      1000
+      1000,
+      Infinity,
+      0
     );
     // Set up circular movement
     if (team === "player") {

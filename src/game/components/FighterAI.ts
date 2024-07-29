@@ -8,7 +8,7 @@ import type MainScene from "../scenes/MainScene";
 export class FighterAI implements IAI {
   private static readonly SHOT_RANGE = 200;
   private static readonly RUN_DISTANCE = 200;
-  private static readonly ACCELERATION = 0.5;
+  private static readonly ACCELERATION = 1;
 
   private fighter: Fighter;
   private scene: MainScene;
@@ -72,14 +72,15 @@ export class FighterAI implements IAI {
 
     if (tooClose && this.target) {
       this.fighter.goAway(this.target.position, FighterAI.ACCELERATION);
-      console.log("too close, running away");
+    } else if (this.target) {
+      this.fighter.goTowards(this.target.position, FighterAI.ACCELERATION);
     } else {
       this.fighter.thrust(1);
     }
 
     if (!this.fighter.weapon.isEmpty() && !tooClose) {
       this.running = false;
-      console.log("switching to attacking");
+      //   console.log("switching to attacking");
     }
   }
 
@@ -97,10 +98,10 @@ export class FighterAI implements IAI {
         }
       }
 
-      //   if (this.fighter.weapon.isEmpty()) {
-      //     this.running = true;
-      //     console.log("switching to running");
-      //   }
+      if (this.fighter.weapon.isEmpty()) {
+        this.running = true;
+        // console.log("switching to running");
+      }
     }
   }
 }

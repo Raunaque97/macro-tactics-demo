@@ -8,8 +8,8 @@
   onMount(() => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
-      width: 800,
-      height: 600,
+      width: 1200,
+      height: 800,
       parent: gameContainer,
       scene: [MainScene],
       physics: {
@@ -33,8 +33,8 @@
 
 <style>
   .game-container {
-    width: 800px;
-    height: 600px;
+    width: 1200px;
+    height: 800px;
     margin: 0 auto;
   }
 </style>
