@@ -16,7 +16,7 @@ export abstract class Ship
   turnRate: number;
 
   constructor(
-    scene: MainScene,
+    public scene: MainScene,
     x: number,
     y: number,
     texture: string,
@@ -52,6 +52,15 @@ export abstract class Ship
     // Update position based on velocity
     this.x += (this.velocity.x * delta) / 1000;
     this.y += (this.velocity.y * delta) / 1000;
+    if (
+      this.x < -Number(this.scene.game.config.width) ||
+      this.x > 2 * Number(this.scene.game.config.width) ||
+      this.y < -Number(this.scene.game.config.height) ||
+      this.y > 2 * Number(this.scene.game.config.height)
+    ) {
+      this.scene.entityManager.removeUnit(this);
+      this.destroy();
+    }
 
     // Update rotation based on facing direction
     this.rotation = Math.atan2(this.facing.y, this.facing.x);
@@ -60,6 +69,7 @@ export abstract class Ship
   takeDamage(amount: number) {
     this.health -= amount;
     if (this.health <= 0) {
+      this.scene.entityManager.removeUnit(this);
       this.destroy();
     }
   }

@@ -25,12 +25,8 @@ export class FighterWeapon implements IWeapon {
       this.cooldown = FighterWeapon.SHOT_COOLDOWN_TIME;
 
       const startVel = Vector2.from({
-        x:
-          FighterWeapon.BULLET_SPEED * this.fighter.facing.x +
-          this.fighter.velocity.x,
-        y:
-          FighterWeapon.BULLET_SPEED * this.fighter.facing.y +
-          this.fighter.velocity.y,
+        x: FighterWeapon.BULLET_SPEED * this.fighter.facing.x,
+        y: FighterWeapon.BULLET_SPEED * this.fighter.facing.y,
       });
 
       new Laser(

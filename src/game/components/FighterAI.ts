@@ -2,7 +2,7 @@ import type { IAI } from "../types";
 import { Fighter } from "../entities/Fighter";
 import { Vector2 } from "../utils/Vector2";
 import type { Ship } from "../entities/Ship";
-import type { UnitManager } from "../UnitManager";
+import type { GameEntityManager } from "../GameEntityManager";
 import type MainScene from "../scenes/MainScene";
 
 export class FighterAI implements IAI {
@@ -45,19 +45,19 @@ export class FighterAI implements IAI {
     // priority: bomber > fighter > frigate > factory
     // TODO add max range / view distance
     const target =
-      this.scene.unitManager.getNearestUnit(this.fighter.x, this.fighter.y, {
+      this.scene.entityManager.getNearestUnit(this.fighter.x, this.fighter.y, {
         team: this.fighter.team === "player" ? "enemy" : "player",
         unitType: "bomber",
       }) ||
-      this.scene.unitManager.getNearestUnit(this.fighter.x, this.fighter.y, {
+      this.scene.entityManager.getNearestUnit(this.fighter.x, this.fighter.y, {
         team: this.fighter.team === "player" ? "enemy" : "player",
         unitType: "fighter",
       }) ||
-      this.scene.unitManager.getNearestUnit(this.fighter.x, this.fighter.y, {
+      this.scene.entityManager.getNearestUnit(this.fighter.x, this.fighter.y, {
         team: this.fighter.team === "player" ? "enemy" : "player",
         unitType: "frigate",
       }) ||
-      this.scene.unitManager.getNearestUnit(this.fighter.x, this.fighter.y, {
+      this.scene.entityManager.getNearestUnit(this.fighter.x, this.fighter.y, {
         team: this.fighter.team === "player" ? "enemy" : "player",
         unitType: "factory",
       });

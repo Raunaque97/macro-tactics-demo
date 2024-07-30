@@ -11,18 +11,18 @@ import backgroundImage from "../../assets/background.png";
 import fighterP1Image from "../../assets/fighter_p1.png";
 import fighterP2Image from "../../assets/fighter_p2.png";
 import laserImage from "../../assets/laser.png";
-import { UnitManager } from "../UnitManager";
+import { GameEntityManager } from "../GameEntityManager";
 
 export default class MainScene extends Phaser.Scene {
   private playerShip!: FactoryShip;
   private enemyShip!: FactoryShip;
   private gameUI!: GameUI;
 
-  public unitManager: UnitManager;
+  public entityManager: GameEntityManager;
 
   constructor() {
     super("MainScene");
-    this.unitManager = new UnitManager(this);
+    this.entityManager = new GameEntityManager(this);
   }
 
   preload() {
@@ -39,8 +39,8 @@ export default class MainScene extends Phaser.Scene {
 
     this.playerShip = new FactoryShip(this, 400, 400, "player");
     this.enemyShip = new FactoryShip(this, 800, 400, "enemy");
-    this.unitManager.addUnit(this.playerShip);
-    this.unitManager.addUnit(this.enemyShip);
+    this.entityManager.addUnit(this.playerShip);
+    this.entityManager.addUnit(this.enemyShip);
 
     // Create UI
     this.gameUI = new GameUI(this, this.playerShip, this.enemyShip);
@@ -56,7 +56,7 @@ export default class MainScene extends Phaser.Scene {
   update(time: number, delta: number) {
     this.playerShip.update(time, delta);
     this.enemyShip.update(time, delta);
-    this.unitManager.update(time, delta);
+    this.entityManager.update(time, delta);
 
     // Update UI
     this.gameUI.update();

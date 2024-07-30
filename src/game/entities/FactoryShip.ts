@@ -2,7 +2,7 @@ import { Ship } from "./Ship";
 import type { Team, CombatUnitType } from "../types";
 import { Vector2 } from "../utils/Vector2";
 import { Fighter } from "./Fighter";
-import type { UnitManager } from "../UnitManager";
+import type { GameEntityManager } from "../GameEntityManager";
 import type MainScene from "../scenes/MainScene";
 
 export class FactoryShip extends Ship {
@@ -125,7 +125,7 @@ export class FactoryShip extends Ship {
     );
     ship.velocity = this.velocity;
     ship.facing = this.facing;
-    this.scene.unitManager.addUnit(ship);
+    this.scene.entityManager.addUnit(ship);
   }
 
   getResources(): number {

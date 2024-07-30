@@ -1,10 +1,12 @@
 import Phaser from "phaser";
-import type { Team } from "../types";
+import { Bullet, type Team } from "../types";
 import type { Vector2 } from "../utils/Vector2";
 import type MainScene from "../scenes/MainScene";
+import type { Ship } from "./Ship";
 
-export class Laser extends Phaser.GameObjects.Sprite {
+export class Laser extends Bullet {
   private velocity: Vector2;
+  private static readonly DAMAGE = 1;
 
   constructor(
     public scene: MainScene,
@@ -14,20 +16,28 @@ export class Laser extends Phaser.GameObjects.Sprite {
     velocity: Vector2,
     facing: Vector2
   ) {
-    super(scene, x, y, "laser");
+    super(scene, x, y, "laser", team);
     this.velocity = velocity;
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
     this.setRotation(Math.atan2(facing.y, facing.x));
-    this.setTint(team === "player" ? 0x00ff00 : 0xff0000);
+    this.setTint(team === "player" ? 0x8888ff : 0xff0000);
 
     // Set up collision detection and destruction after a certain time
     (this.body as Phaser.Physics.Arcade.Body).setVelocity(
       velocity.x,
       velocity.y
     );
-    scene.time.delayedCall(2000, () => this.destroy());
+    scene.time.delayedCall(5000, () => this.destroy());
+    this.setOrigin(0.5, 0.5);
+    this.setSize(2, 2);
+  }
+
+  onHit(target: Ship) {
+    // console.log("hit", target);
+    target.takeDamage(Laser.DAMAGE);
+    this.destroy();
   }
 
   update(time: number, delta: number) {
@@ -37,10 +47,10 @@ export class Laser extends Phaser.GameObjects.Sprite {
 
     // Destroy if out of bounds
     if (
-      this.x < 0 ||
-      this.x > Number(this.scene.game.config.width) ||
-      this.y < 0 ||
-      this.y > Number(this.scene.game.config.height)
+      this.x < -Number(this.scene.game.config.width) ||
+      this.x > 2 * Number(this.scene.game.config.width) ||
+      this.y < -Number(this.scene.game.config.height) ||
+      this.y > 2 * Number(this.scene.game.config.height)
     ) {
       this.destroy();
     }

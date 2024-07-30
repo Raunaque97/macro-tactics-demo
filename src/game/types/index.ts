@@ -1,3 +1,5 @@
+import type { Ship } from "../entities/Ship";
+import type MainScene from "../scenes/MainScene";
 import { Vector2 } from "../utils/Vector2";
 
 export type CombatUnitType = "fighter" | "bomber" | "frigate";
@@ -26,4 +28,19 @@ export interface IWeapon {
 
 export interface IAI {
   update(delta: number): void;
+}
+
+export abstract class Bullet extends Phaser.Physics.Arcade.Sprite {
+  constructor(
+    public scene: MainScene,
+    x: number,
+    y: number,
+    texture: string,
+    team: Team
+  ) {
+    super(scene, x, y, texture);
+    scene.entityManager.addBullet(team, this);
+  }
+
+  abstract onHit(target: Ship): void;
 }
