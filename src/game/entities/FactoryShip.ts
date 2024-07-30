@@ -4,26 +4,49 @@ import { Vector2 } from "../utils/Vector2";
 import { Fighter } from "./Fighter";
 import type { GameEntityManager } from "../GameEntityManager";
 import type MainScene from "../scenes/MainScene";
+import { Bomber } from "./Bomber";
+
+type ShipConstructor = new (
+  scene: MainScene,
+  x: number,
+  y: number,
+  team: Team
+) => Ship;
+
+interface UnitInfo {
+  class: ShipConstructor;
+  productionTime: number;
+  cost: number;
+}
 
 export class FactoryShip extends Ship {
   public static readonly RESOURCE_GENERATION_RATE = 1; // Resource per second
-  public static readonly FIGHTER_COST = 1;
-  public static readonly BOMBER_COST = 5;
-  public static readonly FRIGATE_COST = 20;
   public static readonly ROTATION_SPEED = 0.025; // Radians per second
   public static readonly MOVE_SPEED = 5;
   public maxHealth: number = 1000;
-
   private resources: number = 0;
   private currentProduction: {
     unitType: CombatUnitType;
     timeLeft: number;
   } | null = null;
   // production time in seconds
-  private static readonly PRODUCTION_TIMES: Record<CombatUnitType, number> = {
-    fighter: 0.5,
-    bomber: 4,
-    frigate: 16,
+  private static readonly UNIT_INFO: Record<CombatUnitType, UnitInfo> = {
+    // TODO balance cost, production time later
+    fighter: {
+      class: Fighter,
+      productionTime: 0.5,
+      cost: 1,
+    },
+    bomber: {
+      class: Bomber,
+      productionTime: 0.5,
+      cost: 1,
+    },
+    frigate: {
+      class: Fighter, // Placeholder, replace with actual Frigate class when implemented
+      productionTime: 0.5,
+      cost: 1,
+    },
   };
 
   constructor(public scene: MainScene, x: number, y: number, team: Team) {
@@ -88,36 +111,19 @@ export class FactoryShip extends Ship {
     this.resources -= this.getUnitCost(unitType);
     this.currentProduction = {
       unitType,
-      timeLeft: FactoryShip.PRODUCTION_TIMES[unitType],
+      timeLeft: FactoryShip.UNIT_INFO[unitType].productionTime,
     };
   }
 
   private getUnitCost(unitType: CombatUnitType): number {
-    switch (unitType) {
-      case "fighter":
-        return FactoryShip.FIGHTER_COST;
-      case "bomber":
-        return FactoryShip.BOMBER_COST;
-      case "frigate":
-        return FactoryShip.FRIGATE_COST;
-      default:
-        return Infinity;
-    }
+    return FactoryShip.UNIT_INFO[unitType].cost;
   }
 
   private finishProduction(unitType: CombatUnitType) {
-    switch (unitType) {
-      case "fighter":
-        this.spawnFighter();
-        break;
-      // Add cases for other unit types here
-    }
-  }
-
-  private spawnFighter() {
+    // spawn unit
     const spawnOffset = this.facing.multiply(60); // Spawn 60 pixels in front of the factory
     const spawnPosition = this.position.add(spawnOffset);
-    const ship = new Fighter(
+    const ship = new FactoryShip.UNIT_INFO[unitType].class(
       this.scene,
       spawnPosition.x,
       spawnPosition.y,
@@ -125,7 +131,6 @@ export class FactoryShip extends Ship {
     );
     ship.velocity = this.velocity;
     ship.facing = this.facing;
-    this.scene.entityManager.addUnit(ship);
   }
 
   getResources(): number {
@@ -138,7 +143,7 @@ export class FactoryShip extends Ship {
   } | null {
     if (this.currentProduction) {
       const totalTime =
-        FactoryShip.PRODUCTION_TIMES[this.currentProduction.unitType];
+        FactoryShip.UNIT_INFO[this.currentProduction.unitType].productionTime;
       const progress = 1 - this.currentProduction.timeLeft / totalTime;
       return { unitType: this.currentProduction.unitType, progress };
     }

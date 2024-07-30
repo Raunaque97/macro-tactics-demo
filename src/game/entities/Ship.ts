@@ -37,6 +37,7 @@ export abstract class Ship
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    scene.entityManager.addUnit(this);
   }
 
   get position(): Vector2 {
@@ -88,6 +89,9 @@ export abstract class Ship
   }
 
   turn(direction: number) {
+    //clip direction to [-1, 1]
+    direction = Math.min(1, Math.max(-1, direction));
+
     const turnAmount = this.turnRate * direction;
     const cosTheta = Math.cos(turnAmount);
     const sinTheta = Math.sin(turnAmount);

@@ -10,8 +10,11 @@ import factoryP2Image from "../../assets/factory_p2.png";
 import backgroundImage from "../../assets/background.png";
 import fighterP1Image from "../../assets/fighter_p1.png";
 import fighterP2Image from "../../assets/fighter_p2.png";
+import bomberP1Image from "../../assets/bomber_p1.png";
+import bomberP2Image from "../../assets/bomber_p2.png";
 import laserImage from "../../assets/laser.png";
 import { GameEntityManager } from "../GameEntityManager";
+import { Bomb } from "../entities/Bomb";
 
 export default class MainScene extends Phaser.Scene {
   private playerShip!: FactoryShip;
@@ -31,7 +34,31 @@ export default class MainScene extends Phaser.Scene {
     this.load.image("background", backgroundImage);
     this.load.image("fighter_p1", fighterP1Image);
     this.load.image("fighter_p2", fighterP2Image);
+    this.load.image("bomber_p1", bomberP1Image);
+    this.load.image("bomber_p2", bomberP2Image);
     this.load.image("laser", laserImage);
+    // create a red circle for the bomb using graphics
+
+    const graphics = this.make.graphics();
+    graphics.clear();
+    graphics.fillStyle(0xff0000);
+    graphics.fillCircle(3, 3, 3);
+    graphics.generateTexture("bomb", 6, 6);
+
+    graphics.clear();
+    graphics.fillStyle(0xffffff, 0.8);
+    graphics.fillCircle(
+      Bomb.DETONATION_RANGE,
+      Bomb.DETONATION_RANGE,
+      Bomb.DETONATION_RANGE
+    );
+    graphics.generateTexture(
+      "explosion",
+      Bomb.DETONATION_RANGE * 2,
+      Bomb.DETONATION_RANGE * 2
+    );
+
+    graphics.destroy();
   }
 
   create() {
@@ -39,8 +66,6 @@ export default class MainScene extends Phaser.Scene {
 
     this.playerShip = new FactoryShip(this, 400, 400, "player");
     this.enemyShip = new FactoryShip(this, 800, 400, "enemy");
-    this.entityManager.addUnit(this.playerShip);
-    this.entityManager.addUnit(this.enemyShip);
 
     // Create UI
     this.gameUI = new GameUI(this, this.playerShip, this.enemyShip);

@@ -30,6 +30,15 @@ export class Vector2 {
     return mag > 0 ? this.divide(mag) : new Vector2(0, 0);
   }
 
+  rotate(angle: number): Vector2 {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    return new Vector2(
+      this.x * cos - this.y * sin,
+      this.x * sin + this.y * cos
+    );
+  }
+
   static dot(a: Vector2, b: Vector2): number {
     return a.x * b.x + a.y * b.y;
   }

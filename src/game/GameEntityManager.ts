@@ -101,15 +101,10 @@ export class GameEntityManager {
     this.units.children.entries.forEach((unit) => unit.update(time, delta));
   }
 
-  getNearestUnit(
-    x: number,
-    y: number,
-    options?: {
-      team?: Team;
-      unitType?: UnitType;
-      maxDistance?: number;
-    }
-  ): Ship | null {
+  private getFilteredGroup(options?: {
+    team?: Team;
+    unitType?: UnitType;
+  }): Phaser.GameObjects.Group | null {
     let searchGroup: Phaser.GameObjects.Group | null = null;
 
     if (options?.team && options?.unitType) {
@@ -132,6 +127,20 @@ export class GameEntityManager {
     } else {
       searchGroup = this.unitsGroup;
     }
+
+    return searchGroup;
+  }
+
+  getNearestUnit(
+    x: number,
+    y: number,
+    options?: {
+      team?: Team;
+      unitType?: UnitType;
+      maxDistance?: number;
+    }
+  ): Ship | null {
+    let searchGroup = this.getFilteredGroup(options);
     if (!searchGroup) return null;
 
     const nearestUnit = this.scene.physics.closest(
@@ -152,24 +161,31 @@ export class GameEntityManager {
     return nearestUnit || null;
   }
 
+  getUnitsInRange(
+    x: number,
+    y: number,
+    range: number,
+    options?: {
+      team?: Team;
+      unitType?: UnitType;
+    }
+  ): Ship[] {
+    const searchGroup = this.getFilteredGroup(options);
+    if (!searchGroup) return [];
+
+    const res = [] as Ship[];
+    searchGroup.getChildren().forEach((unit) => {
+      if (!(unit instanceof Ship)) return;
+      const distance = Phaser.Math.Distance.Between(x, y, unit.x, unit.y);
+      // TODO: handle rectangular hit box
+      if (distance <= range + (unit.body?.width || 0)) {
+        res.push(unit as Ship);
+      }
+    });
+    return res;
+  }
+
   private getKey(team: Team, unitType: UnitType): string {
     return `${team}-${unitType}`;
   }
-
-  //   getUnitsInRange(
-  //     x: number,
-  //     y: number,
-  //     range: number,
-  //     options?: {
-  //       team?: string;
-  //       unitType?: string;
-  //     }
-  //   ): Ship[] {
-  //     let searchGroup = this.units;
-  //     if (options?.team) searchGroup = this.unitsByTeam.get(options.team)!;
-  //     if (options?.unitType)
-  //       searchGroup = this.unitsByType.get(options.unitType)!;
-
-  //     return this.scene.physics.overlapCirc(x, y, range, false, false);
-  //   }
 }

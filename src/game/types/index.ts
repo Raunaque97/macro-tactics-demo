@@ -20,7 +20,7 @@ export interface IShip {
 }
 
 export interface IWeapon {
-  shoot(): void;
+  shoot(...args: any[]): void;
   update(delta: number): void;
   reloaded(): void;
   isReadyToShoot(): boolean;
