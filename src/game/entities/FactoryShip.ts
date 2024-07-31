@@ -20,7 +20,7 @@ interface UnitInfo {
 }
 
 export class FactoryShip extends Ship {
-  public static readonly RESOURCE_GENERATION_RATE = 1; // Resource per second
+  public static readonly RESOURCE_GENERATION_RATE = 0.2; // Resource per second
   public static readonly ROTATION_SPEED = 0.025; // Radians per second
   public static readonly MOVE_SPEED = 5;
   public maxHealth: number = 1000;
@@ -39,13 +39,13 @@ export class FactoryShip extends Ship {
     },
     bomber: {
       class: Bomber,
-      productionTime: 0.5,
-      cost: 1,
+      productionTime: 1.5,
+      cost: 3,
     },
     frigate: {
-      class: Fighter, // Placeholder, replace with actual Frigate class when implemented
-      productionTime: 0.5,
-      cost: 1,
+      class: Bomber, // Placeholder, replace with actual Frigate class when implemented
+      productionTime: 4,
+      cost: 9,
     },
   };
 

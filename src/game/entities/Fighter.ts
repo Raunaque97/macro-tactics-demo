@@ -19,7 +19,7 @@ export class Fighter extends Ship {
       team === "player" ? "fighter_p1" : "fighter_p2",
       "fighter",
       team,
-      50,
+      2,
       Fighter.MAX_VELOCITY,
       Fighter.TURN_RATE
     );

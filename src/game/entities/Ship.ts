@@ -50,6 +50,7 @@ export abstract class Ship
   }
 
   update(time: number, delta: number) {
+    if (!this.active) return;
     // Update position based on velocity
     this.x += (this.velocity.x * delta) / 1000;
     this.y += (this.velocity.y * delta) / 1000;

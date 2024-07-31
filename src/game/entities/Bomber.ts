@@ -19,7 +19,7 @@ export class Bomber extends Ship {
       team === "player" ? "bomber_p1" : "bomber_p2",
       "bomber",
       team,
-      75, // health
+      9, // health
       Bomber.MAX_VELOCITY,
       Bomber.TURN_RATE
     );

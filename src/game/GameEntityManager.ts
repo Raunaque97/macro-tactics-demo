@@ -75,11 +75,11 @@ export class GameEntityManager {
     this.unitsByTeamAndType.get(key)!.add(unit);
     this.setupCollisions();
 
-    console.log(`Unit added: ${unit.team} ${unit.type}`);
-    console.log(`Total units: ${this.units.getLength()}`);
-    console.log(
-      `${key} units: ${this.unitsByTeamAndType.get(key)?.getLength()}`
-    );
+    // console.log(`Unit added: ${unit.team} ${unit.type}`);
+    // console.log(`Total units: ${this.units.getLength()}`);
+    // console.log(
+    //   `${key} units: ${this.unitsByTeamAndType.get(key)?.getLength()}`
+    // );
   }
 
   addBullet(team: Team, bullet: Bullet) {
@@ -99,6 +99,11 @@ export class GameEntityManager {
 
   update(time: number, delta: number) {
     this.units.children.entries.forEach((unit) => unit.update(time, delta));
+  }
+
+  getUnitCount(team: Team, unitType: UnitType): number {
+    const key = `${team}-${unitType}`;
+    return this.unitsByTeamAndType.get(key)?.getLength() || 0;
   }
 
   private getFilteredGroup(options?: {

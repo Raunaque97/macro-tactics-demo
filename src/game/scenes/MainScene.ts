@@ -15,11 +15,13 @@ import bomberP2Image from "../../assets/bomber_p2.png";
 import laserImage from "../../assets/laser.png";
 import { GameEntityManager } from "../GameEntityManager";
 import { Bomb } from "../entities/Bomb";
+import { AIController } from "../systems/AIController";
 
 export default class MainScene extends Phaser.Scene {
   private playerShip!: FactoryShip;
   private enemyShip!: FactoryShip;
   private gameUI!: GameUI;
+  private aiController!: AIController;
 
   public entityManager: GameEntityManager;
 
@@ -67,6 +69,8 @@ export default class MainScene extends Phaser.Scene {
     this.playerShip = new FactoryShip(this, 400, 400, "player");
     this.enemyShip = new FactoryShip(this, 800, 400, "enemy");
 
+    this.aiController = new AIController(this.enemyShip);
+
     // Create UI
     this.gameUI = new GameUI(this, this.playerShip, this.enemyShip);
     this.scale.on("resize", this.resize, this);
@@ -81,7 +85,8 @@ export default class MainScene extends Phaser.Scene {
   update(time: number, delta: number) {
     this.playerShip.update(time, delta);
     this.enemyShip.update(time, delta);
-    this.entityManager.update(time, delta);
+    this.entityManager?.update(time, delta);
+    this.aiController?.update(delta);
 
     // Update UI
     this.gameUI.update();
