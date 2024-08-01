@@ -12,6 +12,9 @@ import fighterP1Image from "../../assets/fighter_p1.png";
 import fighterP2Image from "../../assets/fighter_p2.png";
 import bomberP1Image from "../../assets/bomber_p1.png";
 import bomberP2Image from "../../assets/bomber_p2.png";
+import frigateP1Image from "../../assets/frigate_p1.png";
+import frigateP2Image from "../../assets/frigate_p2.png";
+import missileImage from "../../assets/missile.png";
 import laserImage from "../../assets/laser.png";
 import { GameEntityManager } from "../GameEntityManager";
 import { Bomb } from "../entities/Bomb";
@@ -38,6 +41,9 @@ export default class MainScene extends Phaser.Scene {
     this.load.image("fighter_p2", fighterP2Image);
     this.load.image("bomber_p1", bomberP1Image);
     this.load.image("bomber_p2", bomberP2Image);
+    this.load.image("frigate_p1", frigateP1Image);
+    this.load.image("frigate_p2", frigateP2Image);
+    this.load.image("missile", missileImage);
     this.load.image("laser", laserImage);
     // create a red circle for the bomb using graphics
 

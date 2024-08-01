@@ -25,9 +25,6 @@ export class Bomb extends Bullet {
   ) {
     super(scene, x, y, "bomb", team);
     this.velocity = velocity;
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
-
     (this.body as Phaser.Physics.Arcade.Body).setVelocity(
       velocity.x,
       velocity.y

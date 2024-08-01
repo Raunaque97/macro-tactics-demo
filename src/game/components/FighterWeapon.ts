@@ -61,15 +61,11 @@ export class FighterWeapon implements IWeapon {
     return !this.loaded;
   }
 
-  isReloaded(): boolean {
-    return this.shots === FighterWeapon.SHOT_CAPACITY;
-  }
-
   private isCooledDown(): boolean {
     return this.cooldown === 0;
   }
 
   isReadyToShoot(): boolean {
-    return this.isCooledDown() && !this.isEmpty();
+    return this.loaded;
   }
 }

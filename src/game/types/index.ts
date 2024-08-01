@@ -39,6 +39,8 @@ export abstract class Bullet extends Phaser.Physics.Arcade.Sprite {
     team: Team
   ) {
     super(scene, x, y, texture);
+    scene.add.existing(this);
+    scene.physics.add.existing(this);
     scene.entityManager.addBullet(team, this);
   }
 

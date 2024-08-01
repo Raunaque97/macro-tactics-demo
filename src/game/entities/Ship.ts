@@ -12,8 +12,6 @@ export abstract class Ship
   velocity: Vector2;
   facing: Vector2;
   health: number;
-  maxVelocity: number;
-  turnRate: number;
 
   constructor(
     public scene: MainScene,
@@ -23,8 +21,8 @@ export abstract class Ship
     type: UnitType,
     team: Team,
     health: number,
-    maxVelocity: number,
-    turnRate: number
+    public maxVelocity: number,
+    public turnRate: number
   ) {
     super(scene, x, y, texture);
     this.type = type;
@@ -32,8 +30,6 @@ export abstract class Ship
     this.velocity = new Vector2(0, 0);
     this.facing = new Vector2(1, 0);
     this.health = health;
-    this.maxVelocity = maxVelocity;
-    this.turnRate = turnRate;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);

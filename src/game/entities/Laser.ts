@@ -18,8 +18,6 @@ export class Laser extends Bullet {
   ) {
     super(scene, x, y, "laser", team);
     this.velocity = velocity;
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
 
     this.setRotation(Math.atan2(facing.y, facing.x));
     this.setTint(team === "player" ? 0x8888ff : 0xff0000);
