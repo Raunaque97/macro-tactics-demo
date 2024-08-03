@@ -56,8 +56,8 @@ export class GameUI extends Phaser.GameObjects.Container {
     CombatUnitType,
     Phaser.GameObjects.Container
   > {
-    const buttonWidth = 100;
-    const buttonHeight = 50;
+    const buttonWidth = 120;
+    const buttonHeight = 70;
     const buttonSpacing = 20;
     const startX =
       ((this.scene.game.config.width as number) -
@@ -67,17 +67,17 @@ export class GameUI extends Phaser.GameObjects.Container {
       (this.scene.game.config.height as number) - buttonHeight - 10;
 
     return {
-      fighter: this.createButton(startX, startY, "F", "fighter"),
+      fighter: this.createButton(startX, startY, "fighter_outline", "fighter"),
       bomber: this.createButton(
         startX + buttonWidth + buttonSpacing,
         startY,
-        "B",
+        "bomber_outline",
         "bomber"
       ),
       frigate: this.createButton(
         startX + (buttonWidth + buttonSpacing) * 2,
         startY,
-        "Fr",
+        "frigate_outline",
         "frigate"
       ),
     };
@@ -86,29 +86,40 @@ export class GameUI extends Phaser.GameObjects.Container {
   private createButton(
     x: number,
     y: number,
-    text: string,
+    imageKey: string,
     unitType: CombatUnitType
   ): Phaser.GameObjects.Container {
     const button = this.scene.add.container(x, y);
-    const background = this.scene.add.rectangle(0, 0, 100, 50, 0x4a4a4a);
-    const label = this.scene.add.text(0, 0, text, {
-      fontSize: "24px",
-      color: "#ffffff",
-    });
-    label.setOrigin(0.5);
-    button.add([background, label]);
+    const background = this.scene.add
+      .rectangle(0, 0, 120, 70, 0xffffff, 0.1)
+      .setStrokeStyle(2, 0x808080)
+      .setOrigin(0.5);
+
+    const unitImage = this.scene.add.image(0, -15, imageKey).setScale(0.5);
+    const costText = this.scene.add
+      .text(0, 10, `Cost: ${FactoryShip.UNIT_INFO[unitType].cost}`, {
+        fontSize: "14px",
+        color: "#ffffff",
+      })
+      .setOrigin(0.5);
+    const timeText = this.scene.add
+      .text(0, 25, `Time: ${FactoryShip.UNIT_INFO[unitType].productionTime}s`, {
+        fontSize: "14px",
+        color: "#ffffff",
+      })
+      .setOrigin(0.5);
+
+    button.add([background, unitImage, costText, timeText]);
 
     background
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () => {
         if (this.isButtonEnabled(unitType)) {
-          background.setFillStyle(0x6a6a6a);
+          background.setFillStyle(0x4a4a4a);
         }
       })
       .on("pointerout", () => {
-        if (this.isButtonEnabled(unitType)) {
-          background.setFillStyle(0x4a4a4a);
-        }
+        background.setFillStyle(0x2a2a2a);
       })
       .on("pointerdown", () => this.onUnitButtonClick(unitType));
 
@@ -134,7 +145,7 @@ export class GameUI extends Phaser.GameObjects.Container {
       this.productionBar.destroy();
     }
     const button = this.unitButtons[unitType];
-    this.productionBar = this.scene.add.rectangle(-50, 30, 100, 5, 0x00ff00);
+    this.productionBar = this.scene.add.rectangle(-60, 35, 120, 5, 0x00ff00);
     this.productionBar.setOrigin(0, 0.5);
     this.productionBar.setScale(0, 1);
     button.add(this.productionBar);
@@ -142,9 +153,8 @@ export class GameUI extends Phaser.GameObjects.Container {
 
   update() {
     // Update health bars
-    const playerHealthPercent =
-      this.playerShip.health / this.playerShip.maxHealth;
-    const enemyHealthPercent = this.enemyShip.health / this.enemyShip.maxHealth;
+    const playerHealthPercent = this.playerShip.health / FactoryShip.maxHealth;
+    const enemyHealthPercent = this.enemyShip.health / FactoryShip.maxHealth;
     this.playerHealthBar.setScale(playerHealthPercent, 1);
     this.enemyHealthBar.setScale(enemyHealthPercent, 1);
 
@@ -165,11 +175,12 @@ export class GameUI extends Phaser.GameObjects.Container {
       this.productionBar = null;
     }
 
-    // Update button interactivity
+    // Update button interactivity and border color
     Object.entries(this.unitButtons).forEach(([unitType, button]) => {
       const background = button.getAt(0) as Phaser.GameObjects.Rectangle;
       const isEnabled = this.isButtonEnabled(unitType as CombatUnitType);
-      background.setFillStyle(isEnabled ? 0x4a4a4a : 0x2a2a2a);
+      // background.setFillStyle(isEnabled ? 0x4a4a4a : 0x2a2a2a);
+      background.setStrokeStyle(2, isEnabled ? 0xffffff : 0x808080);
       (background as any).input.enabled = isEnabled;
     });
   }

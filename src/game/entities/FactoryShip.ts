@@ -24,14 +24,15 @@ export class FactoryShip extends Ship {
   public static readonly RESOURCE_GENERATION_RATE = 0.5; // Resource per second
   public static readonly ROTATION_SPEED = 0.025; // Radians per second
   public static readonly MOVE_SPEED = 5;
-  public maxHealth: number = 1000;
+  public static readonly maxHealth: number = 1000;
+
   private resources: number = 0;
   private currentProduction: {
     unitType: CombatUnitType;
     timeLeft: number;
   } | null = null;
   // production time in seconds
-  private static readonly UNIT_INFO: Record<CombatUnitType, UnitInfo> = {
+  public static readonly UNIT_INFO: Record<CombatUnitType, UnitInfo> = {
     // TODO balance cost, production time later
     fighter: {
       class: Fighter,
@@ -58,7 +59,7 @@ export class FactoryShip extends Ship {
       team === "player" ? "factory_p1" : "factory_p2",
       "factory",
       team,
-      1000,
+      FactoryShip.maxHealth,
       Infinity,
       0
     );
@@ -70,6 +71,7 @@ export class FactoryShip extends Ship {
       this.velocity = new Vector2(0, FactoryShip.MOVE_SPEED);
       this.facing = new Vector2(0, 1);
     }
+    this.resources = 3;
     // set hit box to a circle
     this.setOrigin(0.5, 0.5);
     // this.setOffset(-this.width / 2, -this.height / 2);

@@ -1,27 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Phaser from "phaser";
-  import MainScene from "../game/scenes/MainScene";
+  import { SvelteToast, toast } from "@zerodevx/svelte-toast";
+  import game from "../game";
 
   let gameContainer: HTMLElement;
 
   onMount(() => {
-    const config: Phaser.Types.Core.GameConfig = {
-      type: Phaser.AUTO,
-      width: 1200,
-      height: 800,
-      parent: gameContainer,
-      scene: [MainScene],
-      physics: {
-        default: "arcade",
-        arcade: {
-          gravity: { x: 0, y: 0 },
-          debug: false,
-        },
-      },
-    };
-
-    const game = new Phaser.Game(config);
+    if (gameContainer) {
+      gameContainer.appendChild(game.canvas);
+    }
 
     return () => {
       game.destroy(true);
@@ -29,12 +16,31 @@
   });
 </script>
 
-<div bind:this={gameContainer} class="game-container"></div>
+<SvelteToast />
+
+<main>
+  <div bind:this={gameContainer} id="game-container"></div>
+</main>
 
 <style>
-  .game-container {
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
+  }
+
+  #game-container {
     width: 1200px;
     height: 800px;
-    margin: 0 auto;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+
+  :global(canvas) {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
   }
 </style>

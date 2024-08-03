@@ -69,6 +69,11 @@ export default class MainScene extends Phaser.Scene {
     graphics.destroy();
   }
 
+  init() {
+    // Initialize or reset the GameEntityManager here
+    this.entityManager = new GameEntityManager(this);
+  }
+
   create() {
     this.add.image(600, 400, "background").setScale(1.2);
 
@@ -96,5 +101,19 @@ export default class MainScene extends Phaser.Scene {
 
     // Update UI
     this.gameUI.update();
+    // Check for game end conditions
+    this.checkGameEnd();
+  }
+
+  private checkGameEnd() {
+    if (this.playerShip.health <= 0) {
+      this.endGame("lose");
+    } else if (this.enemyShip.health <= 0) {
+      this.endGame("win");
+    }
+  }
+
+  private endGame(result: "win" | "lose") {
+    this.scene.start("GameEndScene", { result });
   }
 }

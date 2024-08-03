@@ -8,7 +8,7 @@ export class Bomber extends Ship {
   weapon: BomberWeapon;
   private ai: BomberAI;
 
-  static readonly MAX_VELOCITY = 50; // pixels per second
+  static readonly MAX_VELOCITY = 40; // pixels per second
   static readonly TURN_RATE = 0.01; // radians per frame
 
   constructor(public scene: MainScene, x: number, y: number, team: Team) {

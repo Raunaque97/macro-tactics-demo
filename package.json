@@ -22,6 +22,7 @@
     "vite": "^5.3.4"
   },
   "dependencies": {
+    "@zerodevx/svelte-toast": "^0.9.5",
     "phaser": "^3.80.1"
   }
 }
