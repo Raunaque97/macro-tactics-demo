@@ -16,6 +16,7 @@ import frigateP1Image from "../../assets/frigate_p1.png";
 import frigateP2Image from "../../assets/frigate_p2.png";
 import missileImage from "../../assets/missile.png";
 import laserImage from "../../assets/laser.png";
+import sparkImage from "../../assets/spark.png";
 import { GameEntityManager } from "../GameEntityManager";
 import { Bomb } from "../entities/Bomb";
 import { AIController } from "../systems/AIController";
@@ -45,6 +46,7 @@ export default class MainScene extends Phaser.Scene {
     this.load.image("frigate_p2", frigateP2Image);
     this.load.image("missile", missileImage);
     this.load.image("laser", laserImage);
+    this.load.image("spark", sparkImage);
     // create a red circle for the bomb using graphics
 
     const graphics = this.make.graphics();

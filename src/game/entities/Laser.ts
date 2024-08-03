@@ -7,6 +7,7 @@ import type { Ship } from "./Ship";
 export class Laser extends Bullet {
   private velocity: Vector2;
   private static readonly DAMAGE = 1;
+  private spark: Phaser.GameObjects.Image;
 
   constructor(
     public scene: MainScene,
@@ -30,27 +31,40 @@ export class Laser extends Bullet {
     scene.time.delayedCall(5000, () => this.destroy());
     this.setOrigin(0.5, 0.5);
     this.setSize(2, 2);
+
+    // Create the spark effect
+    this.spark = scene.add.image(0, 0, "spark");
+    this.spark.setVisible(false);
   }
 
   onHit(target: Ship) {
-    // console.log("hit", target);
     target.takeDamage(Laser.DAMAGE);
+    this.showSparkEffect();
     this.destroy();
   }
 
-  update(time: number, delta: number) {
-    // Move the laser
-    this.x += (this.velocity.x * delta) / 1000;
-    this.y += (this.velocity.y * delta) / 1000;
+  private showSparkEffect() {
+    this.spark
+      .setPosition(this.x, this.y)
+      .setVisible(true)
+      .setAlpha(1)
+      .setScale(3);
 
-    // Destroy if out of bounds
-    if (
-      this.x < -Number(this.scene.game.config.width) ||
-      this.x > 2 * Number(this.scene.game.config.width) ||
-      this.y < -Number(this.scene.game.config.height) ||
-      this.y > 2 * Number(this.scene.game.config.height)
-    ) {
-      this.destroy();
-    }
+    this.scene.tweens.add({
+      targets: this.spark,
+      scale: 0.1,
+      duration: 100,
+      onComplete: () => {
+        this.spark.destroy();
+      },
+    });
+  }
+
+  update(time: number, delta: number) {
+    // Existing update logic...
+  }
+
+  destroy(fromScene?: boolean) {
+    super.destroy(fromScene);
   }
 }

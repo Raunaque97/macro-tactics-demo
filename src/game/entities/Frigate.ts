@@ -26,6 +26,9 @@ export class Frigate extends Ship {
 
     this.weapon = new FrigateWeapon(this);
     this.ai = new FrigateAI(this, scene);
+
+    this.setOrigin(0.5, 0.5);
+    this.setCircle(this.width / 3, this.height / 3);
   }
 
   update(time: number, delta: number) {

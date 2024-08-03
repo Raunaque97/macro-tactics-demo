@@ -19,13 +19,16 @@ export class Bomber extends Ship {
       team === "player" ? "bomber_p1" : "bomber_p2",
       "bomber",
       team,
-      9, // health
+      12, // health
       Bomber.MAX_VELOCITY,
       Bomber.TURN_RATE
     );
 
     this.weapon = new BomberWeapon(this);
     this.ai = new BomberAI(this, scene);
+
+    this.setOrigin(0.5, 0.5);
+    this.setCircle(this.width / 3, this.height / 3);
   }
 
   update(time: number, delta: number) {

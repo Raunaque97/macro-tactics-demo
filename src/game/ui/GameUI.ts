@@ -67,17 +67,17 @@ export class GameUI extends Phaser.GameObjects.Container {
       (this.scene.game.config.height as number) - buttonHeight - 10;
 
     return {
-      fighter: this.createButton(startX, startY, "fighter_outline", "fighter"),
+      fighter: this.createButton(startX, startY, "fighter_p1", "fighter"),
       bomber: this.createButton(
         startX + buttonWidth + buttonSpacing,
         startY,
-        "bomber_outline",
+        "bomber_p1",
         "bomber"
       ),
       frigate: this.createButton(
         startX + (buttonWidth + buttonSpacing) * 2,
         startY,
-        "frigate_outline",
+        "frigate_p1",
         "frigate"
       ),
     };
@@ -95,7 +95,10 @@ export class GameUI extends Phaser.GameObjects.Container {
       .setStrokeStyle(2, 0x808080)
       .setOrigin(0.5);
 
-    const unitImage = this.scene.add.image(0, -15, imageKey).setScale(0.5);
+    const scale =
+      unitType === "frigate" ? 0.5 : unitType === "bomber" ? 1 : 1.5;
+
+    const unitImage = this.scene.add.image(0, -15, imageKey).setScale(scale);
     const costText = this.scene.add
       .text(0, 10, `Cost: ${FactoryShip.UNIT_INFO[unitType].cost}`, {
         fontSize: "14px",

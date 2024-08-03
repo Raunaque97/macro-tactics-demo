@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { toast } from "@zerodevx/svelte-toast";
 import backgroundImage from "../../assets/background.png";
+import logo from "../../../public/logo.svg";
 
 export default class MenuScene extends Phaser.Scene {
   private static BUTTON_WIDTH = 350; // Set a fixed width for all buttons
@@ -11,6 +12,7 @@ export default class MenuScene extends Phaser.Scene {
 
   preload() {
     this.load.image("background", backgroundImage);
+    this.load.image("logo", logo);
   }
 
   create() {
@@ -22,10 +24,16 @@ export default class MenuScene extends Phaser.Scene {
         this.sys.game.config.width as number,
         this.sys.game.config.height as number
       );
+    // Add logo
+    this.add
+      .image(this.cameras.main.centerX, 100, "logo")
+      .setOrigin(0.5)
+      .setScale(1)
+      .setAlpha(0.75);
 
     // Add title text
     const titleText = this.add
-      .text(this.cameras.main.centerX, 100, "Space RTS", {
+      .text(this.cameras.main.centerX, 100, "Macro Tactics", {
         fontSize: "48px",
         color: "#ffffff",
       })
